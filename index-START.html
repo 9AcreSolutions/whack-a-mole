@@ -9,7 +9,7 @@
 <body>
 
   <h1>Whack-a-mole! <span class="score">0</span></h1>
-  <h2>High score:</h2>
+  <h2>High score: <span class = "highScore"></span></h2>
   <h2>Time: <span class="timerDisplay"></span></h2>
   <div class="game">
     <div class="hole hole1">
@@ -36,8 +36,11 @@
   const holes = document.querySelectorAll('.hole');
   const scoreBoard = document.querySelector('.score');
   const moles = document.querySelectorAll('.mole');
+  let highScore = document.querySelector('.highScore');
   let timerDisplay = document.querySelector('.timerDisplay');
   let gameTime = 10000;
+  let bestScoreData;
+  highScore.textContent = window.localStorage.getItem('High Score')
 
   let lastHole;
   let timeUp = false;
@@ -62,7 +65,7 @@
   function peep() {
     const time = randomTime(500, 1000);
     const hole = randomHole(holes);
-    rtimerDisplay.textContent = gameTime;
+    countDownTimer(gameTime);
     hole.classList.add('up');
     setTimeout(() => {
       gameTime --;
@@ -75,6 +78,7 @@
 
   function startGame() {
     scoreBoard.textContent = 0;
+    highScore.textContent = 0;
     timeUp = false;
     score = 0;
     peep();
@@ -86,20 +90,24 @@
     score++;
     this.classList.remove('up');
     scoreBoard.textContent = score;
+    high_score(score);
   }
 
-  function highScore() {
+  function high_score(score) {
     //if scoreBoard text content is > highScore... make highScore == scoreBoard
+    if(score > highScore.textContent) {
+      highScore.textContent = score;
+      bestScoreData = window.localStorage.setItem('High Score', score.toString());
+    }
     //save highScore locally to remain if user returns
-
   }
 
-  function countDownTimer() {
+  function countDownTimer(gameTime) {
     //timer textContent = time
     //publish countdown for player to see
     //change text color to red when < 10 seconds
-    //console.log(gameTime);
-
+    timerDisplay.textContent = gameTime;
+    //convert to seconds/minutes
   }
 
   moles.forEach(mole => mole.addEventListener('click', bonk));
